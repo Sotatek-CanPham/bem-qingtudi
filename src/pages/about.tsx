@@ -7,10 +7,11 @@ import Button from '@mui/material/Button';
 import Link from '../components/Link';
 import ProTip from '../components/ProTip';
 import Copyright from '../components/Copyright';
+import Layout from '../components/BaseLayout';
 
 const About: NextPage = () => {
   return (
-    <Container maxWidth="lg">
+    <Layout title={"home"}> <Container maxWidth="lg">
       <Box
         sx={{
           my: 4,
@@ -32,6 +33,8 @@ const About: NextPage = () => {
         <Copyright />
       </Box>
     </Container>
+    </Layout>
+
   );
 };
 
