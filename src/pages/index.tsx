@@ -1,10 +1,12 @@
 import * as React from 'react';
 import type { NextPage } from 'next';
 import Container from '@mui/material/Container';
-import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
+import { Tooltip } from '@mui/material';
+import styled from '@emotion/styled';
 import Link from '../components/Link';
 import Layout from '../components/BaseLayout';
+import { getGamesHome } from '../api/games';
 
 const ListGame = styled("div")({
   display: "flex",
@@ -23,6 +25,10 @@ const BoxGame = styled(Link)({
   fontWeight: 700,
   width: "calc((100% / 7) - 13px)",
 
+  "@media (max-width: 1199px)": {
+    width: 147,
+  },
+
   span: {
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -40,6 +46,8 @@ const ImgBox = styled("div")({
     borderRadius: 25,
     boxShadow: "0px 0px 5px 1px #c5c5c5",
     width: "100%",
+    height: 147,
+    display: "flex",
   },
 
   "&:hover": {
@@ -56,59 +64,41 @@ const ImgBox = styled("div")({
 
 
 const Home: NextPage = () => {
+  const [gamesHome, setGameHome] = React.useState<any>([])
+  const [currPaginated, setCurrPaginated] = React.useState<number>(20);
+  const [totalPages, setTotalPages] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    onGetGamesHome(currPaginated)
+  }, [currPaginated])
+
+  const onGetGamesHome = async (page: number) => {
+    const res = await getGamesHome({page: page});
+    setGameHome(res?.data?.crawlers || [])
+    setTotalPages(res?.data?.pages || 0)
+    console.log("res", res?.data?.crawlers)
+  }
+
   return (
     <Layout title={"Home"}>
       <Container maxWidth="lg">
         <Box className="box">
           <ListGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
-            <BoxGame href="/about">
-              <ImgBox>
-                <img src="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" alt="https://www.qingtudi.com/images/l/minecraft/minecraft253.jpg" />
-              </ImgBox>
-              <span>Minecraft</span>
-            </BoxGame>
+            {
+              gamesHome?.map((item: any, index: number) => {
+                return (
+                  <BoxGame href="/detail" key={index}>
+                    <ImgBox>
+                      <img src={item.images} alt={item.images} />
+                    </ImgBox>
+
+                    <Tooltip title={item.title} placement="top" arrow>
+                      <span>{item.title}</span>
+                    </Tooltip>
+                  </BoxGame>
+                )
+              })
+            }
           </ListGame>
         </Box>
       </Container>

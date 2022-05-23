@@ -3,6 +3,7 @@ import Head from 'next/head';
 import styled from '@emotion/styled';
 import HeadComponent from '../Header';
 import FooterComponent from '../Footer';
+import ScrollTop from './ScrollTop';
 
 const MainBox = styled("main")({
   margin: "15px 0",
@@ -26,6 +27,7 @@ const BaseLayout: FC<Props> = ({ title, children }) => {
       <HeadComponent />
       <MainBox>{children}</MainBox>
       <FooterComponent />
+      <ScrollTop />
     </>
   );
 };
